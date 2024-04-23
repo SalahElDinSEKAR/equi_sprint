@@ -17,7 +17,10 @@ int max_pwm = 1000;
 Balanced::Balanced()
 {
   kp_balance = 0.0, kd_balance = 0.0;
+
   kp_speed = 35.0, ki_speed = 0.8; //kp speedd s enerve a 7.5 (c'était à cause du signe)
+  // kp_speed = 0.0, ki_speed = 0.0; //kp speedd s enerve a 7.5 (c'était à cause du signe)
+
   kp_turn = 0.0, kd_turn = 0.0;
   offset_orientation=0.0;
 }
@@ -146,7 +149,8 @@ void Balanced::PI_SpeedRing()
 
 void Balanced::PD_VerticalRing()
 {
-  balance_control_output= kp_balance * (kalmanfilter.angle - 0) + kd_balance * (kalmanfilter.Gyro_x - 0);
+  double ang_eq = -6.09;
+  balance_control_output= kp_balance * (kalmanfilter.angle - ang_eq) + kd_balance * (kalmanfilter.Gyro_x - 0);
 }
 
 void Balanced::PI_SteeringRing()

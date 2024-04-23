@@ -71,13 +71,16 @@ void updt_offset(float offset)
 
 void updt_coef(int command, float kp, float kd){
   if (command<200){
-    Balanced.kp_balance=kp*30/255;
-    Balanced.kd_balance=kd*10/255;
+    Balanced.kp_balance=kp*30/255 + 5.0;
+    Balanced.kd_balance=kd*10/255 + 1.0;
     return;
   }
   if (command<1000){
     Balanced.kp_speed=kp*5/255 + 35.0; //3.67 Pas mal
     Balanced.ki_speed=kd*0.5/255 + 0.8; // 0.4
+
+    // Balanced.kp_speed=kp*5/255 + 0.0; //3.67 Pas mal
+    // Balanced.ki_speed=kd*0.5/255 + 0.0; // 0.4
     return;
   }
   if (command>1000){
@@ -247,11 +250,23 @@ void loop() {
     Serial.print(Balanced.ki_speed);
     Serial.print(" Integral= ");
     Serial.print(Balanced.car_speed_integeral);
-    
     Serial.print(" Spd_out= ");
     Serial.println(Balanced.speed_control_output);
+    
+    Serial.print("ang= "); 
+    Serial.print(kalmanfilter.angle);
+    Serial.print(" vit= ");
+    Serial.print(kalmanfilter.Gyro_x);
+    Serial.print(" Kp= ");
+    Serial.print(Balanced.kp_balance);
+    Serial.print(" Kd= ");
+    Serial.print(Balanced.kd_balance);
+    Serial.print(" Spd_out= ");
+    Serial.println(Balanced.balance_control_output);
+
     Serial.print(" pwm_left= ");
     Serial.println(Balanced.pwm_left);
+    Serial.println("");
 
     // Serial.println(Balanced.test_interrupt);
     // Serial.println("In loop");
