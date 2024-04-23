@@ -34,8 +34,10 @@ class Balanced
           void Speed_control(int trans, int turn);
   
 /*Speed value*/
-          double pwm_left;
-          double pwm_right;
+          double pwm_left=0.0;
+          double pwm_right=0.0;
+          double pwm_left_imp=0.0;
+          double pwm_right_imp=0.0;
           int encoder_left_pulse_num_speed;
           int encoder_right_pulse_num_speed;
 
@@ -64,6 +66,8 @@ class Balanced
           int setting_car_speed;
           int test_interrupt=0;
           bool arret_moteur;
+
+          int cmd_sens=0;
 
           
    private:

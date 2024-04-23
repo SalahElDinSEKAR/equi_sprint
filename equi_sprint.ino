@@ -76,8 +76,8 @@ void updt_coef(int command, float kp, float kd){
     return;
   }
   if (command<1000){
-    Balanced.kp_speed=kp*50/255 ;
-    Balanced.ki_speed=kd*15/255;
+    Balanced.kp_speed=kp*5/255 + 6.0; //3.67 Pas mal
+    Balanced.ki_speed=kd*0.5/255 + 1.0; // 0.4
     return;
   }
   if (command>1000){
@@ -243,8 +243,15 @@ void loop() {
     Serial.print(Balanced.right_speed);
     Serial.print(" Kp= ");
     Serial.print(Balanced.kp_speed);
+    Serial.print(" Ki= ");
+    Serial.print(Balanced.ki_speed);
+    Serial.print(" Integral= ");
+    Serial.print(Balanced.car_speed_integeral);
+    
     Serial.print(" Spd_out= ");
     Serial.println(Balanced.speed_control_output);
+    Serial.print(" pwm_left= ");
+    Serial.println(Balanced.pwm_left);
 
     // Serial.println(Balanced.test_interrupt);
     // Serial.println("In loop");

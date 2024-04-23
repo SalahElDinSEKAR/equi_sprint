@@ -17,7 +17,7 @@ int max_pwm = 400;
 Balanced::Balanced()
 {
   kp_balance = 0.0, kd_balance = 0.0;
-  kp_speed = 0.0, ki_speed = 0.0; //kp speedd s enerve a 7.5 (c'était à cause du signe)
+  kp_speed = 4, ki_speed = 0.6; //kp speedd s enerve a 7.5 (c'était à cause du signe)
   kp_turn = 0.0, kd_turn = 0.0;
   offset_orientation=0.0;
 }
@@ -31,6 +31,18 @@ void Balanced::Total_Control()
 
     pwm_left = constrain(pwm_left, -max_pwm, max_pwm);
     pwm_right = constrain(pwm_right, -max_pwm, max_pwm);
+
+    cmd_sens += 1;
+
+    if (cmd_sens%2000==0)
+    {
+      pwm_left_imp = -pwm_left_imp;
+      pwm_right_imp = -pwm_right_imp;
+    }
+
+    pwm_left = pwm_left + pwm_left_imp;
+    pwm_right = pwm_right + pwm_right_imp;
+    
   
     while(EXCESSIVE_ANGLE_TILT || PICKED_UP)
     { 
@@ -105,11 +117,6 @@ void Balanced::Back(int speed)
 }
 
 
-
-
-
-
-
 void Balanced::Left(int speed)
 {
   setting_car_speed = 0;
@@ -133,7 +140,7 @@ void Balanced::PI_SpeedRing()
    car_speed_integeral += -setting_car_speed; 
    car_speed_integeral = constrain(car_speed_integeral, -200, 200);
 
-   speed_control_output = -kp_speed * speed_filter - ki_speed * car_speed_integeral;
+   speed_control_output = +kp_speed * speed_filter + ki_speed * car_speed_integeral;
 }
 
 void Balanced::PD_VerticalRing()
