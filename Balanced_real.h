@@ -39,6 +39,9 @@ class Balanced
           int encoder_left_pulse_num_speed;
           int encoder_right_pulse_num_speed;
 
+          int left_speed;
+          int right_speed;
+
 /*Cnt*/
           int interrupt_cnt;
 

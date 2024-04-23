@@ -12,7 +12,7 @@ Balanced Balanced;
 KalmanFilter kalmanfilter;
 Motor Motor;
 
-int max_pwm = 600;
+int max_pwm = 400;
 
 Balanced::Balanced()
 {
@@ -29,7 +29,6 @@ void Balanced::Total_Control()
     pwm_left = balance_control_output - speed_control_output - rotation_control_output;//Superposition of Vertical Velocity Steering Ring
     pwm_right = balance_control_output - speed_control_output + rotation_control_output;//Superposition of Vertical Velocity Steering Ring
 
-    
     pwm_left = constrain(pwm_left, -max_pwm, max_pwm);
     pwm_right = constrain(pwm_right, -max_pwm, max_pwm);
   
@@ -53,6 +52,9 @@ void Balanced::Get_EncoderSpeed()
                                                   Motor::encoder_count_left_a;
   encoder_right_pulse_num_speed += pwm_right < 0 ? (-Motor::encoder_count_right_a) :
                                                   Motor::encoder_count_right_a;
+
+  left_speed = encoder_left_pulse_num_speed;
+  right_speed = encoder_right_pulse_num_speed;
   Motor::encoder_count_left_a=0;
   Motor::encoder_count_right_a=0;
 }

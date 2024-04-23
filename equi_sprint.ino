@@ -177,6 +177,8 @@ void Timer2::init(int time)
 
 static void Timer2::interrupt()
 { 
+  // Serial.println("Start");
+
   sei(); //enable the global interrupt
   Balanced.Get_EncoderSpeed();//on récupère les données des encodeurs
   Mpu6050.DataProcessing();//on récupère les données de la centrale inertielle
@@ -195,13 +197,18 @@ static void Timer2::interrupt()
   if (not arret_moteur){
     Balanced.Total_Control();
   }
+
+  // Serial.println("END");
+  // Serial.println("");
 }
 
 
 
 void setup() {
+  Motor.Encoder_init();
+
   //Serial for the receiver
-  Timer2.init(TIMER);
+  Timer2.init(5);
   Mpu6050.init();
   Serial3.begin(9600);
   //Serial monitor
@@ -217,6 +224,8 @@ void setup() {
   //sbus_tx.Begin();
   pinMode(15,  INPUT);//receiver is on pin RX1=15
 
+  
+
 }
 
 
@@ -224,13 +233,22 @@ void setup() {
 void loop() {
   static unsigned long print_time;
   
-  for(int i=0;i<5;)
-  {
-      if(millis() - print_time > 3000)
-   { 
-      print_time = millis();
-      Serial.println(Balanced.test_interrupt);
-   }
+
+  if(millis() - print_time > 1000)
+  { 
+    print_time = millis();
+    Serial.print("spd= "); 
+    Serial.print(Balanced.left_speed);
+    Serial.print(" ");
+    Serial.print(Balanced.right_speed);
+    Serial.print(" Kp= ");
+    Serial.print(Balanced.kp_speed);
+    Serial.print(" Spd_out= ");
+    Serial.println(Balanced.speed_control_output);
+
+    // Serial.println(Balanced.test_interrupt);
+    // Serial.println("In loop");
   }
+  
 }
 
