@@ -71,13 +71,16 @@ void updt_offset(float offset)
 
 void updt_coef(int command, float kp, float kd){
   if (command<200){
-    Balanced.kp_balance=kp*30/255 + 5.0;
-    Balanced.kd_balance=kd*10/255 + 1.0;
+    // Balanced.kp_balance=kp*30/255 + 30.0;
+    // Balanced.kd_balance=kd*10/255 + 1.0;
+
+    Balanced.kp_balance=kp*30/255 + 0.0;
+    Balanced.kd_balance=kd*10/255 + 0.0;
     return;
   }
   if (command<1000){
-    Balanced.kp_speed=kp*5/255 + 35.0; //3.67 Pas mal
-    Balanced.ki_speed=kd*0.5/255 + 0.8; // 0.4
+    Balanced.kp_speed=kp*5/255 + 75.0; //3.67 Pas mal
+    Balanced.ki_speed=kd*0.5/255 + 1.5; // 0.4
 
     // Balanced.kp_speed=kp*5/255 + 0.0; //3.67 Pas mal
     // Balanced.ki_speed=kd*0.5/255 + 0.0; // 0.4

@@ -16,9 +16,10 @@ int max_pwm = 1000;
 
 Balanced::Balanced()
 {
+  // kp_balance = 30.0, kd_balance = 1.0;
   kp_balance = 0.0, kd_balance = 0.0;
 
-  kp_speed = 35.0, ki_speed = 0.8; //kp speedd s enerve a 7.5 (c'était à cause du signe)
+  kp_speed = 75.0, ki_speed = 1.5; //kp speedd s enerve a 7.5 (c'était à cause du signe)
   // kp_speed = 0.0, ki_speed = 0.0; //kp speedd s enerve a 7.5 (c'était à cause du signe)
 
   kp_turn = 0.0, kd_turn = 0.0;
@@ -45,6 +46,9 @@ void Balanced::Total_Control()
 
     pwm_left = pwm_left + pwm_left_imp;
     pwm_right = pwm_right + pwm_right_imp;
+
+    // pwm_left = 100;
+    // pwm_right = 100;
     
   
     while(EXCESSIVE_ANGLE_TILT || PICKED_UP)
