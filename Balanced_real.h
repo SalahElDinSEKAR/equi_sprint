@@ -59,7 +59,6 @@ class Balanced
           double rotation_control_output;
           int setting_turn_speed;
           int setting_car_speed;
-          int test_balanced=0;
           int test_interrupt=0;
           bool arret_moteur;
 
