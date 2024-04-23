@@ -18,9 +18,8 @@ bool arret_moteur=false;
 bool stopped=false;
 
 /* SBUS object, reading SBUS */
-bfs::SbusRx sbus_rx(&Serial1);
-/* SBUS object, writing SBUS */
-//bfs::SbusTx sbus_tx(&Serial3);
+bfs::SbusRx sbus_rx(&Serial3);
+
 /* SBUS data */
 bfs::SbusData data;
 
@@ -152,32 +151,6 @@ void telecom(){
       
     }
       
-    if ( millis() - t0 > 1000){
-        // Serial.print("angle: ");
-        // Serial.println(kalmanfilter.angle);
-
-        // Serial.print("kp_balance: ");
-        // Serial.println(Balanced.kp_balance);
-        // Serial.print("kd_balance: ");
-        // Serial.println(Balanced.kd_balance);
-        // Serial.print("kp_speed: ");
-        // Serial.println(Balanced.kp_speed);
-        // Serial.print("ki_speed: ");
-        // Serial.println(Balanced.ki_speed);
-        // Serial.print("car integral: ");
-        // Serial.println(Balanced.car_speed_integeral);
-        // Serial.print("kp_turn: ");
-        // Serial.println(Balanced.kp_turn);
-        // Serial.print("kd_turn: ");
-        // Serial.println(Balanced.kd_turn);
-        // Serial.print("offset_orientation: ");
-        // Serial.println(Balanced.offset_orientation);
-
-        // Serial.println("----------------------------\r");
-        //Serial.println(converted_forward);
-        
-        t0=millis();
-      }
    if (mode==0){
     arret_moteur=true;
     //Serial.println("MODE: NO MOTOR");
@@ -199,22 +172,14 @@ void Timer2::init(int time)
 {
   MsTimer2::set(time,interrupt);
   MsTimer2::start();
-  //Balanced.test_interrupt=2;
   
 }
 
 static void Timer2::interrupt()
 { 
   sei(); //enable the global interrupt
-  //Balanced.test_interrupt=2;
   Balanced.Get_EncoderSpeed();//on récupère les données des encodeurs
   Mpu6050.DataProcessing();//on récupère les données de la centrale inertielle
-
-  //Serial.print("angle apres Kalman: ");
-  //Serial.println(kalmanfilter.angle);
-
-  //Kp_balanced = 6.5;
-  //Kd_balanced = 
 
   Balanced.PD_VerticalRing();
   Balanced.interrupt_cnt++;
@@ -224,20 +189,21 @@ static void Timer2::interrupt()
     Balanced.PI_SpeedRing();//calcul de 
     Balanced.PI_SteeringRing();
   }
+
   telecom();
+
   if (not arret_moteur){
     Balanced.Total_Control();
   }
-  //Serial.println("----------------------------\r");
 }
 
 
 
 void setup() {
   //Serial for the receiver
-  Timer2.init(10);
+  Timer2.init(TIMER);
   Mpu6050.init();
-  Serial1.begin(9600);
+  Serial3.begin(9600);
   //Serial monitor
   Serial.begin(9600);
 
@@ -245,11 +211,11 @@ void setup() {
   Serial2.begin(115200);
    //1 motor channel 4 nombre de pôles
   
-  while (!Serial1) {}
+  while (!Serial3) {}
   /* Begin the SBUS communication */
   sbus_rx.Begin();
   //sbus_tx.Begin();
-  pinMode(19,  INPUT);//receiver is on pin RX1=19
+  pinMode(15,  INPUT);//receiver is on pin RX1=15
 
 }
 
