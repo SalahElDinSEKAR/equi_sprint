@@ -76,8 +76,8 @@ void updt_coef(int command, float kp, float kd){
     return;
   }
   if (command<1000){
-    Balanced.kp_speed=kp*5/255 + 6.0; //3.67 Pas mal
-    Balanced.ki_speed=kd*0.5/255 + 1.0; // 0.4
+    Balanced.kp_speed=kp*5/255 + 35.0; //3.67 Pas mal
+    Balanced.ki_speed=kd*0.5/255 + 0.8; // 0.4
     return;
   }
   if (command>1000){

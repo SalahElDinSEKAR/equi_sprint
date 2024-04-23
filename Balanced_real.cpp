@@ -12,12 +12,12 @@ Balanced Balanced;
 KalmanFilter kalmanfilter;
 Motor Motor;
 
-int max_pwm = 400;
+int max_pwm = 1000;
 
 Balanced::Balanced()
 {
   kp_balance = 0.0, kd_balance = 0.0;
-  kp_speed = 4, ki_speed = 0.6; //kp speedd s enerve a 7.5 (c'était à cause du signe)
+  kp_speed = 35.0, ki_speed = 0.8; //kp speedd s enerve a 7.5 (c'était à cause du signe)
   kp_turn = 0.0, kd_turn = 0.0;
   offset_orientation=0.0;
 }
@@ -134,13 +134,14 @@ void Balanced::PI_SpeedRing()
    double car_speed=(encoder_left_pulse_num_speed + encoder_right_pulse_num_speed) * 0.5;
    encoder_left_pulse_num_speed = 0;
    encoder_right_pulse_num_speed = 0;
-   speed_filter = speed_filter_old * 0.7 + car_speed * 0.3;
+   speed_filter = speed_filter_old * 0.1 + car_speed * 0.9;
    speed_filter_old = speed_filter;
    car_speed_integeral += speed_filter;
    car_speed_integeral += -setting_car_speed; 
-   car_speed_integeral = constrain(car_speed_integeral, -200, 200);
+   car_speed_integeral = constrain(car_speed_integeral, -300, 300);
 
-   speed_control_output = +kp_speed * speed_filter + ki_speed * car_speed_integeral;
+   speed_control_output = -kp_speed * speed_filter - ki_speed * car_speed_integeral;
+   speed_control_output = -speed_control_output;
 }
 
 void Balanced::PD_VerticalRing()
