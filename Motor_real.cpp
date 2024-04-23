@@ -43,7 +43,5 @@ void Motor::Right(int speed)
 
 void Motor::Control(int l_spd,int r_spd)
 {
-  l_spd=constrain(l_spd, -300, 300);
-  r_spd=constrain(r_spd, -300, 300);
   Serial2.print("!M "+ String(l_spd)+" "+ String(r_spd)+ "\r");
 }

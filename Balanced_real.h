@@ -36,8 +36,8 @@ class Balanced
 /*Speed value*/
           double pwm_left=0.0;
           double pwm_right=0.0;
-          double pwm_left_imp=0.0;
-          double pwm_right_imp=0.0;
+          double pwm_left_imp=300.0;
+          double pwm_right_imp=300.0;
           int encoder_left_pulse_num_speed;
           int encoder_right_pulse_num_speed;
 
@@ -71,8 +71,8 @@ class Balanced
 
           
    private:
-   #define ANGLE_MIN -27
-   #define ANGLE_MAX 27
+   #define ANGLE_MIN -60 //27
+   #define ANGLE_MAX 60 //27
    #define EXCESSIVE_ANGLE_TILT (kalmanfilter.angle < ANGLE_MIN || ANGLE_MAX < kalmanfilter.angle)
    #define PICKED_UP (kalmanfilter.angle6 < -10 || 22 < kalmanfilter.angle6)
 };

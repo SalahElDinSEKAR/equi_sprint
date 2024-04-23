@@ -71,19 +71,25 @@ void updt_offset(float offset)
 
 void updt_coef(int command, float kp, float kd){
   if (command<200){
-    // Balanced.kp_balance=kp*30/255 + 30.0;
+    // Balanced.kp_balance=kp*30/255 + 20.0;
     // Balanced.kd_balance=kd*10/255 + 1.0;
+
+    // Balanced.kp_balance=kp*30/255 + 60.0;
+    // Balanced.kd_balance=kd*10/255 + 3.0;
 
     Balanced.kp_balance=kp*30/255 + 0.0;
     Balanced.kd_balance=kd*10/255 + 0.0;
     return;
   }
   if (command<1000){
-    Balanced.kp_speed=kp*5/255 + 75.0; //3.67 Pas mal
-    Balanced.ki_speed=kd*0.5/255 + 1.5; // 0.4
+    // Balanced.kp_speed=kp*5/255 + 40.0; //3.67 Pas mal
+    // Balanced.ki_speed=kd*0.5/255 + 2.0; // 0.4
 
-    // Balanced.kp_speed=kp*5/255 + 0.0; //3.67 Pas mal
-    // Balanced.ki_speed=kd*0.5/255 + 0.0; // 0.4
+    // Balanced.kp_speed=kp*5/255 + 125.0; //3.67 Pas mal
+    // Balanced.ki_speed=kd*0.5/255 + 5.0; // 0.4
+
+    Balanced.kp_speed=kp*40/255 + 1.0; //3.67 Pas mal
+    Balanced.ki_speed=kd*0.5/255 + 0.0; // 0.4
     return;
   }
   if (command>1000){
@@ -191,7 +197,7 @@ static void Timer2::interrupt()
 
   Balanced.PD_VerticalRing();
   Balanced.interrupt_cnt++;
-  if(Balanced.interrupt_cnt > 8)//toutes les 8 itérations
+  if(Balanced.interrupt_cnt > 2)//toutes les 8 itérations
   {
     Balanced.interrupt_cnt=0;
     Balanced.PI_SpeedRing();//calcul de 
@@ -214,7 +220,7 @@ void setup() {
   Motor.Encoder_init();
 
   //Serial for the receiver
-  Timer2.init(5);
+  Timer2.init(10);
   Mpu6050.init();
   Serial3.begin(9600);
   //Serial monitor
@@ -264,7 +270,7 @@ void loop() {
     Serial.print(Balanced.kp_balance);
     Serial.print(" Kd= ");
     Serial.print(Balanced.kd_balance);
-    Serial.print(" Spd_out= ");
+    Serial.print(" Bal_out= ");
     Serial.println(Balanced.balance_control_output);
 
     Serial.print(" pwm_left= ");

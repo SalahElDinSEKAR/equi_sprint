@@ -15,12 +15,16 @@ Motor Motor;
 int max_pwm = 1000;
 
 Balanced::Balanced()
-{
-  // kp_balance = 30.0, kd_balance = 1.0;
+{ 
+  // kp_balance = 20.0, kd_balance = 1.0;
+  // kp_balance = 60.0, kd_balance = 3.0;
   kp_balance = 0.0, kd_balance = 0.0;
 
-  kp_speed = 75.0, ki_speed = 1.5; //kp speedd s enerve a 7.5 (c'était à cause du signe)
+  // kp_speed = 40.0, ki_speed = 2.0; //kp speedd s enerve a 7.5 (c'était à cause du signe)
+  // kp_speed = 125.0, ki_speed = 5.0; //kp speedd s enerve a 7.5 (c'était à cause du signe)
   // kp_speed = 0.0, ki_speed = 0.0; //kp speedd s enerve a 7.5 (c'était à cause du signe)
+
+  kp_speed = 1.0, ki_speed = 0.0; //kp speedd s enerve a 7.5 (c'était à cause du signe)
 
   kp_turn = 0.0, kd_turn = 0.0;
   offset_orientation=0.0;
@@ -30,33 +34,40 @@ void Balanced::Total_Control()
 {
   
   if (not arret_moteur){
-    pwm_left = balance_control_output - speed_control_output - rotation_control_output;//Superposition of Vertical Velocity Steering Ring
-    pwm_right = balance_control_output - speed_control_output + rotation_control_output;//Superposition of Vertical Velocity Steering Ring
+    // pwm_left = balance_control_output - speed_control_output - rotation_control_output;//Superposition of Vertical Velocity Steering Ring
+    // pwm_right = balance_control_output - speed_control_output + rotation_control_output;//Superposition of Vertical Velocity Steering Ring
+
+    pwm_left = - speed_control_output ;//Superposition of Vertical Velocity Steering Ring
+    pwm_right =  - speed_control_output ;//Superposition of Vertical Velocity Steering Ring
+
 
     pwm_left = constrain(pwm_left, -max_pwm, max_pwm);
     pwm_right = constrain(pwm_right, -max_pwm, max_pwm);
 
-    cmd_sens += 1;
+    // cmd_sens += 1;
 
-    if (cmd_sens%2000==0)
-    {
-      pwm_left_imp = -pwm_left_imp;
-      pwm_right_imp = -pwm_right_imp;
-    }
+    // if (cmd_sens%2000==0)
+    // {
+    //   pwm_left_imp = -pwm_left_imp;
+    //   pwm_right_imp = -pwm_right_imp;
+    // }
 
-    pwm_left = pwm_left + pwm_left_imp;
-    pwm_right = pwm_right + pwm_right_imp;
+    // pwm_left = pwm_left + pwm_left_imp;
+    // pwm_right = pwm_right + pwm_right_imp;
 
-    // pwm_left = 100;
-    // pwm_right = 100;
+    // pwm_left = -200;
+    // pwm_right = -200;
     
-  
-    while(EXCESSIVE_ANGLE_TILT || PICKED_UP)
+    //  || PICKED_UP
+    while(EXCESSIVE_ANGLE_TILT)
     { 
       Mpu6050.DataProcessing();
       Motor.Stop();
     }
     Motor.Control(pwm_left,pwm_right);
+
+    
+
    }
 
   else{
@@ -141,14 +152,16 @@ void Balanced::PI_SpeedRing()
    double car_speed=(encoder_left_pulse_num_speed + encoder_right_pulse_num_speed) * 0.5;
    encoder_left_pulse_num_speed = 0;
    encoder_right_pulse_num_speed = 0;
-   speed_filter = speed_filter_old * 0.1 + car_speed * 0.9;
+   speed_filter = speed_filter_old * 0.0 + car_speed * 1.0;
    speed_filter_old = speed_filter;
    car_speed_integeral += speed_filter;
    car_speed_integeral += -setting_car_speed; 
-   car_speed_integeral = constrain(car_speed_integeral, -300, 300);
+   car_speed_integeral = constrain(car_speed_integeral, -400, 400);
 
-   speed_control_output = -kp_speed * speed_filter - ki_speed * car_speed_integeral;
-   speed_control_output = -speed_control_output;
+   speed_control_output = kp_speed * speed_filter + ki_speed * car_speed_integeral;
+  //  speed_control_output = -speed_control_output;
+
+  // speed_control_output = 150;
 }
 
 void Balanced::PD_VerticalRing()
